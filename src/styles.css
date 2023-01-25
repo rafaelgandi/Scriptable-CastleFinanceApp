@@ -1,0 +1,546 @@
+:root {
+    --global-bgcolor: #000;
+    /* --global-bgcolor: #282A2D; */
+    --default-fontcolor: #fff;
+    --dark-fontcolor: #333;
+    --default-padding: 1rem;
+    --rounded-fontfamily: ArialRoundedMTBold, sans-serif;
+    --default-fontfamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* --front-top-gradient: linear-gradient(#5EDAAF, #089E6A); */
+    /* --front-top-gradient: linear-gradient(#000, #FCB841); */
+    --front-top-gradient: linear-gradient(90deg, rgba(187,114,192,1) 0%, rgba(140,132,223,1) 100%);
+    /* --front-top-gradient2: linear-gradient(0deg, rgba(185,114,192,1) 35%, rgba(139,132,222,1) 100%); */
+    --front-top-gradient2: linear-gradient(0deg, rgba(58,64,118,1) 35%, rgba(206,115,113,1) 100%);
+
+    --rounded: 1.1rem;
+    --card-balance-fs: 2.5rem;
+    --card-balance-label-fs: .3em;
+    --ui-red: #FF5D4D;
+    --ui-green: #46C35B;
+    --ui-blue: #5EB0D7;
+    --outline-test: 1px solid yellow;
+    /* --body-bg-color: #8D84DD; */
+    --body-bg-color: rgba(206,115,113,1);
+}
+
+.abg-light-blue {
+    background: linear-gradient(#00A6EE, #00B1F1);
+}
+.abg-blue {
+    background: linear-gradient(#4A66BD, #3252B3);
+}
+.abg-green {
+    background: linear-gradient(#46C35B, #1CBB44);
+}
+.abg-yellow-green {
+    background: linear-gradient(#5BEA5F, #50D254);
+}
+.abg-orange {
+    background: linear-gradient(#F3A653,#F39936);
+}
+.abg-dark-orange {
+    background: linear-gradient(#FF5D4D,#DD5244);
+}
+.abg-dark-purple {
+    background: linear-gradient(#7B41E3,#6A38C5);
+}
+.abg-red {
+    background: linear-gradient(#C93E3E,#992D2D);
+}
+.abg-grey {
+    background: linear-gradient(#8B8B8B,#7E7C7C);
+}
+
+html { 
+    font-size: 16px; 
+    
+}
+* { box-sizing: border-box; }
+body {
+    font-family: var(--default-fontfamily);
+    background-color: var(--global-bgcolor);
+    color: var(--default-fontcolor);
+    position: relative;
+    margin: 0;
+    padding: 0;
+    /* background-color: #481D96; */
+    /* background-color: var(--body-bg-color); */
+}
+
+/* LM: 2022-02-18 18:52:44 [] */
+.in-frontpage-view {
+    overflow: hidden;
+    background-color: var(--body-bg-color);
+}
+
+.hide { display: none !important; }
+
+h1, h2, h3 {
+    font-family: var(--rounded-fontfamily);
+}
+
+blockquote {
+    display: block;
+    font-size: 1.2rem;
+    font-style: italic;
+    text-align: center;
+}
+
+.blur {
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+}
+
+.sml-shadow {
+    box-shadow: 2px 3px 6px 0px rgba(71, 71, 71, 0.5);
+}
+
+.no-show {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    user-select: none;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.page {
+    /* outline: 1px solid yellow; */
+    padding: 0;
+    margin: 0;
+    /* margin-top: 3rem;
+    padding-top: 2rem; */
+    transition: opacity .4s ease;
+    opacity: 1;
+    min-height: 100vh;
+    background-color: var(--global-bgcolor);
+}
+
+.page--hide {
+    opacity: 0 !important;
+    transform: scale(0);
+    position: fixed;
+    top: -9999px;
+}
+
+/* LM: 2022-02-10 16:16:34 [] */
+#front-page {
+    background-color: transparent;
+}
+
+
+.top-section {
+    background: var(--front-top-gradient2);
+    min-height: 12rem;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    box-shadow: 2px 8px 13px -1px rgba(0,0,0,0.75);
+}
+
+label.empty {
+    display: block;
+    text-align: center;
+    padding-right: var(--default-padding);
+    color: var(--dark-fontcolor);
+    font-size: 1.3rem;
+}
+
+#add-account-button {
+    outline: none;
+    position: absolute;
+    top: .8rem;
+    right: .8rem;
+    border: 0;
+    background-color: #000;
+    border-radius: 1rem;
+    opacity: .3;
+    color: var(--default-fontcolor);
+    font-size: .8rem;
+    display: block;
+    padding: .3rem .6rem;
+    font-family: var(--rounded-fontfamily);
+}
+
+
+.top-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+.top-navigation > div {
+    /* outline: 1px solid yellow; */
+    padding: .8rem 0;
+    width: 100%;
+}
+.top-navigation__back-button {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    padding-left: calc(var(--default-padding) + .5rem);
+    color: var(--dark-fontcolor);
+    border: 0;
+    background-color: transparent;
+}
+
+.top-navigation__back-button::after {
+    content: '';
+    --arrow-body: 3px solid var(--default-fontcolor);
+    display: block;
+    width: .8rem;
+    height: .8rem;
+    border-top: var(--arrow-body);
+    border-left: var(--arrow-body);
+    transform: rotate(314deg);
+}
+.top-navigation__menu-button {
+    background-color: transparent;
+    color: var(--default-fontcolor);
+    border: 0;
+    font-size: 1.2rem;
+    display: inline-block;
+    text-align: right;
+    width: 100%;
+    vertical-align: sub;
+    padding: 0 calc(var(--default-padding) + .5rem);
+    font-weight: 400;
+}
+
+.top-section h1 {
+    text-align: center;
+    font-size: var(--card-balance-fs)
+}
+.top-section h1 sup {
+    text-align: center;
+    display: block;
+    font-size: var(--card-balance-label-fs);
+    color: #eee;
+    opacity: 0.7;
+}
+
+.front-page-scroll-area-con {
+    overflow-y: scroll;
+    height: 100vh;
+    position: relative;
+    background-color: transparent;
+    padding:0;  
+}
+
+.accounts-con {
+    /* outline: 1px solid yellow; */
+    position: relative;
+    top: -1.9rem;
+    box-shadow: -1px -9px 12px -7px rgba(0,0,0,0.8);
+    background-color: var(--global-bgcolor);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    padding:var(--default-padding);
+    transition: transform .3s ease-out;
+    margin-top: 190px;
+    border-radius: calc(var(--rounded) + 1rem);
+}
+.account-item {
+    border-radius: var(--rounded);
+    background-color: violet;
+    width: 100%;
+    height: 8rem;
+    position: relative;
+    padding: var(--default-padding);
+}
+.account-item--excluded {
+    opacity: 0.5;
+}
+.account-item__emoji {
+    position: absolute;
+    top: 3px;
+    left: 8px;
+    font-size: 2.5rem;
+}
+.account-item__details-button {
+    position: absolute;
+    top: 8px;
+    right: 0px;
+    width: 2rem;
+    height: 2rem;
+    color: #fff;
+    font-size: 2.4rem;
+    line-height: 1rem;
+    display: block;
+    transform: rotate(90deg);
+    text-align: center;
+    /* outline: 1px solid #000; */
+}
+.account-item h3 {
+    text-align: center;
+    color: #fff;
+    position: relative;
+    bottom: -2rem;
+}
+.account-item sub {
+    display: block;
+    font-size: .7em;
+    opacity: 0.8;
+    font-family: var(--default-fontfamily);
+    font-weight: normal;
+}
+
+.dialog {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    background-color: rgba(43, 43, 43, 0.7);
+    z-index: 9999;
+    border-radius: var(--rounded);
+}
+
+#confirm-dialog {
+    bottom: 2rem;
+    padding: 0;
+}
+#confirm-dialog button {
+    display: block;
+    width: 100%;
+    padding: var(--default-padding);
+    border: 0;
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+.confirm-dialog__action {
+    color: var(--ui-red);
+    border-bottom: 1px solid var(--dark-fontcolor) !important;
+}
+.confirm-dialog__cancel {
+    color: var(--ui-blue);
+}
+
+#update-balance__dialog {
+    top: 4rem;
+    min-height: 12rem;
+    padding: var(--default-padding);
+    border-radius: calc(var(--rounded) + 1rem);
+}
+
+.dialog-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    background-color: var(--global-bgcolor);
+    opacity: 0.5;
+    z-index: 888;
+}
+
+#update-balance__value {
+    display: block;
+    font-family: var(--rounded-fontfamily);
+    font-size: 3rem;
+    text-align: center;
+    outline: none;
+    border: 0;
+    margin: 0 auto;
+    background-color: transparent;
+    padding: var(--default-padding);
+    width: 100%;
+    color: var(--default-fontcolor);
+    margin-top: 2rem;
+}
+
+#update-balance__account-name {
+    font-size: .8rem;
+    font-family: var(--default-fontfamily);
+    color: var(--default-fontcolor);
+    opacity: 0.8;
+    text-align: center;
+}
+
+
+.update-balance__buttoncon {
+    position: relative;
+    /* outline: 1px solid yellow; */
+    height: 5rem;
+}
+.update-balance__buttoncon button {
+    padding: .5rem 2rem;
+    position: absolute;
+    color: var(--default-fontcolor);
+    border: 0;
+    font-size: 2rem;
+    width: 8rem;
+    border-radius: calc(var(--rounded) + .5rem);
+    bottom: 5px;
+}
+#update-balance__add {
+    left: 1rem;
+}
+#update-balance__sub {
+    right: 1rem;
+}
+
+#notification {
+    text-align: center;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    padding: calc(var(--default-padding) * 2);
+    background-color: rgba(43, 43, 43, 0.7);
+    z-index: 9999;
+    color: var(--default-fontcolor);
+    border-radius: var(--rounded);
+}
+
+
+#add-edit-account-page input {
+    font-size: 1.5rem;
+    padding: var(--default-padding);
+    background-color: transparent;
+    outline: none;
+    border: 0;
+    border-bottom: 1px solid var(--dark-fontcolor);
+    text-align: center;
+    color: var(--default-fontcolor);
+    display: block;
+    width: 100%;
+}
+.add-edit-account__emoji {
+    font-size: 4rem !important;
+}
+
+.add-edit-account__itemcon {
+    padding: var(--default-padding);
+}
+.add-edit-account__itemcon label {
+    display: block;
+}
+
+.add-edit-account__ex-from-total {
+    display: inline-block !important;
+    width: 2rem !important;
+    height: 2rem;
+    vertical-align: middle;
+}
+
+.add-edit-account__colorpicker-con {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: .3rem;
+    padding-top: calc(var(--default-padding) / 2);
+}
+.add-edit-account__colorpicker-button {
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    padding: var(--default-padding);
+    border: 0;
+    margin: 0 auto;
+    margin-top: var(--default-padding);
+}
+.add-edit-account__colorpicker-button--selected {
+    border: 3px solid var(--default-fontcolor);
+}
+
+.add-edit-account__save-button,
+.add-edit-account__delete-button {
+    padding: calc(var(--default-padding) * 1.5);
+    font-size: 1rem;
+    border:0;
+    display: block;
+    color: var(--default-fontcolor);
+    width: 100%;
+    background-color: #333;
+    border-radius: 10px;
+}
+.add-edit-account__delete-button {
+    background-color: var(--ui-red);
+}
+
+.account-detail__top-card {
+    border-radius: var(--rounded);
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    margin: var(--default-padding);
+    margin-top: 0;
+}
+
+.account-detail__top-card h2 {
+    text-align: center;
+    font-size: var(--card-balance-fs);
+}
+.account-detail__top-card sup {
+    font-size: var(--card-balance-label-fs);
+    display: block;
+}
+.account-detail__top-card sup b {
+    position: relative;
+    font-size: 1.1rem;
+    top: -1px;
+}
+.account-detail__top-card sub {
+    font-size: .9rem;
+    display: block;
+    text-align: center;
+    opacity: .8;
+    font-family: var(--default-fontfamily);
+    font-weight: 200;
+}
+.account-detail__trans-con {
+    padding: var(--default-padding);
+}
+
+.account-detail__trans-table {
+    display: table;
+    border-collapse: collapse;
+    color: var(--default-fontcolor);
+    width: 100%;
+}
+.account-detail__trans-table th {
+    font-weight: bold;
+    padding: var(--default-padding);
+}
+.account-detail__trans-table tr {
+    border-bottom: 1px solid var(--dark-fontcolor);
+}
+.account-detail__trans-table td {
+    padding: var(--default-padding);
+}
+.account-detail__trans-delete {
+    padding-right: 0 !important;
+}
+.account-detail__trans-date {
+    text-align: left;
+    padding-left:0 !important;
+}
+.account-detail__trans-date sub {
+    display: block;
+    font-size: .8rem;
+    color: var(--default-fontcolor);
+    opacity: 0.8;
+    padding-top: .3rem;
+}
+.account-detail__trans-amount {
+    text-align: right;
+}
+.account-detail__trans--expense {
+    color: var(--ui-red);
+}
+.account-detail__trans--income {
+    color: var(--ui-green);
+}

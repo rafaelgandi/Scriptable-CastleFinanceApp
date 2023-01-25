@@ -1,0 +1,1634 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>castlefinance</title>
+    <!-- Mobile viewport optimization h5bp.com/ad -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- iOS web app, delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <script>
+        // The script prevents links from opening in mobile safari. https://gist.github.com/1042026
+        (function (a, b, c) { if (c in b && b[c]) { var d, e = a.location, f = /^(a|html)$/i; a.addEventListener("click", function (a) { d = a.target; while (!f.test(d.nodeName)) d = d.parentNode; "href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host)) && (a.preventDefault(), e.href = d.href) }, !1) } })(document, window.navigator, "standalone")
+    </script>
+    <script>
+        window.onerror = (e) => {
+            console.log(e);
+        };
+        function pint(v) {
+            if (typeof v === 'string' && v.trim() === '') { return 0; }
+            return parseInt(v, 10);
+        }
+        function pfloat(v) {
+            if (typeof v === 'string' && v.trim() === '') { return 0; }
+            let num = parseFloat(v);
+            if (num < 0) { return 0; }
+            return parseFloat(num.toFixed(2));
+        }
+        function byId(id) {
+            return document.getElementById(id);
+        }
+        function formatNumber(num) {
+            num = parseFloat(num);
+            // See: https://blog.abelotech.com/posts/number-currency-formatting-javascript/
+            return num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        }
+        function triggerEvent(parent, eventName, data = null) {
+            parent.dispatchEvent(new CustomEvent(eventName, {
+                detail: data
+            }));
+        }
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            let date = d.getDate();
+            let year = d.getFullYear();
+            let month = d.getMonth() + 1;
+            if (date < 10) {
+                date = '0' + date;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+            return `${year}-${month}-${date}`;
+        }
+    </script>
+    <!-- Mobile IE allows us to activate ClearType technology for smoothing fonts for easy reading -->
+    <meta http-equiv="cleartype" content="on">
+    <!-- Application styles. -->
+    <style type="text/css">
+        :root {
+    --global-bgcolor: #000;
+    /* --global-bgcolor: #282A2D; */
+    --default-fontcolor: #fff;
+    --dark-fontcolor: #333;
+    --default-padding: 1rem;
+    --rounded-fontfamily: ArialRoundedMTBold, sans-serif;
+    --default-fontfamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* --front-top-gradient: linear-gradient(#5EDAAF, #089E6A); */
+    /* --front-top-gradient: linear-gradient(#000, #FCB841); */
+    --front-top-gradient: linear-gradient(90deg, rgba(187,114,192,1) 0%, rgba(140,132,223,1) 100%);
+    /* --front-top-gradient2: linear-gradient(0deg, rgba(185,114,192,1) 35%, rgba(139,132,222,1) 100%); */
+    --front-top-gradient2: linear-gradient(0deg, rgba(58,64,118,1) 35%, rgba(206,115,113,1) 100%);
+
+    --rounded: 1.1rem;
+    --card-balance-fs: 2.5rem;
+    --card-balance-label-fs: .3em;
+    --ui-red: #FF5D4D;
+    --ui-green: #46C35B;
+    --ui-blue: #5EB0D7;
+    --outline-test: 1px solid yellow;
+    /* --body-bg-color: #8D84DD; */
+    --body-bg-color: rgba(206,115,113,1);
+}
+
+.abg-light-blue {
+    background: linear-gradient(#00A6EE, #00B1F1);
+}
+.abg-blue {
+    background: linear-gradient(#4A66BD, #3252B3);
+}
+.abg-green {
+    background: linear-gradient(#46C35B, #1CBB44);
+}
+.abg-yellow-green {
+    background: linear-gradient(#5BEA5F, #50D254);
+}
+.abg-orange {
+    background: linear-gradient(#F3A653,#F39936);
+}
+.abg-dark-orange {
+    background: linear-gradient(#FF5D4D,#DD5244);
+}
+.abg-dark-purple {
+    background: linear-gradient(#7B41E3,#6A38C5);
+}
+.abg-red {
+    background: linear-gradient(#C93E3E,#992D2D);
+}
+.abg-grey {
+    background: linear-gradient(#8B8B8B,#7E7C7C);
+}
+
+html { 
+    font-size: 16px; 
+    
+}
+* { box-sizing: border-box; }
+body {
+    font-family: var(--default-fontfamily);
+    background-color: var(--global-bgcolor);
+    color: var(--default-fontcolor);
+    position: relative;
+    margin: 0;
+    padding: 0;
+    /* background-color: #481D96; */
+    /* background-color: var(--body-bg-color); */
+}
+
+/* LM: 2022-02-18 18:52:44 [] */
+.in-frontpage-view {
+    overflow: hidden;
+    background-color: var(--body-bg-color);
+}
+
+.hide { display: none !important; }
+
+h1, h2, h3 {
+    font-family: var(--rounded-fontfamily);
+}
+
+blockquote {
+    display: block;
+    font-size: 1.2rem;
+    font-style: italic;
+    text-align: center;
+}
+
+.blur {
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+}
+
+.sml-shadow {
+    box-shadow: 2px 3px 6px 0px rgba(71, 71, 71, 0.5);
+}
+
+.no-show {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    user-select: none;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.page {
+    /* outline: 1px solid yellow; */
+    padding: 0;
+    margin: 0;
+    /* margin-top: 3rem;
+    padding-top: 2rem; */
+    transition: opacity .4s ease;
+    opacity: 1;
+    min-height: 100vh;
+    background-color: var(--global-bgcolor);
+}
+
+.page--hide {
+    opacity: 0 !important;
+    transform: scale(0);
+    position: fixed;
+    top: -9999px;
+}
+
+/* LM: 2022-02-10 16:16:34 [] */
+#front-page {
+    background-color: transparent;
+}
+
+
+.top-section {
+    background: var(--front-top-gradient2);
+    min-height: 12rem;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    box-shadow: 2px 8px 13px -1px rgba(0,0,0,0.75);
+}
+
+label.empty {
+    display: block;
+    text-align: center;
+    padding-right: var(--default-padding);
+    color: var(--dark-fontcolor);
+    font-size: 1.3rem;
+}
+
+#add-account-button {
+    outline: none;
+    position: absolute;
+    top: .8rem;
+    right: .8rem;
+    border: 0;
+    background-color: #000;
+    border-radius: 1rem;
+    opacity: .3;
+    color: var(--default-fontcolor);
+    font-size: .8rem;
+    display: block;
+    padding: .3rem .6rem;
+    font-family: var(--rounded-fontfamily);
+}
+
+
+.top-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+.top-navigation > div {
+    /* outline: 1px solid yellow; */
+    padding: .8rem 0;
+    width: 100%;
+}
+.top-navigation__back-button {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    padding-left: calc(var(--default-padding) + .5rem);
+    color: var(--dark-fontcolor);
+    border: 0;
+    background-color: transparent;
+}
+
+.top-navigation__back-button::after {
+    content: '';
+    --arrow-body: 3px solid var(--default-fontcolor);
+    display: block;
+    width: .8rem;
+    height: .8rem;
+    border-top: var(--arrow-body);
+    border-left: var(--arrow-body);
+    transform: rotate(314deg);
+}
+.top-navigation__menu-button {
+    background-color: transparent;
+    color: var(--default-fontcolor);
+    border: 0;
+    font-size: 1.2rem;
+    display: inline-block;
+    text-align: right;
+    width: 100%;
+    vertical-align: sub;
+    padding: 0 calc(var(--default-padding) + .5rem);
+    font-weight: 400;
+}
+
+.top-section h1 {
+    text-align: center;
+    font-size: var(--card-balance-fs)
+}
+.top-section h1 sup {
+    text-align: center;
+    display: block;
+    font-size: var(--card-balance-label-fs);
+    color: #eee;
+    opacity: 0.7;
+}
+
+.front-page-scroll-area-con {
+    overflow-y: scroll;
+    height: 100vh;
+    position: relative;
+    background-color: transparent;
+    padding:0;  
+}
+
+.accounts-con {
+    /* outline: 1px solid yellow; */
+    position: relative;
+    top: -1.9rem;
+    box-shadow: -1px -9px 12px -7px rgba(0,0,0,0.8);
+    background-color: var(--global-bgcolor);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    padding:var(--default-padding);
+    transition: transform .3s ease-out;
+    margin-top: 190px;
+    border-radius: calc(var(--rounded) + 1rem);
+}
+.account-item {
+    border-radius: var(--rounded);
+    background-color: violet;
+    width: 100%;
+    height: 8rem;
+    position: relative;
+    padding: var(--default-padding);
+}
+.account-item--excluded {
+    opacity: 0.5;
+}
+.account-item__emoji {
+    position: absolute;
+    top: 3px;
+    left: 8px;
+    font-size: 2.5rem;
+}
+.account-item__details-button {
+    position: absolute;
+    top: 8px;
+    right: 0px;
+    width: 2rem;
+    height: 2rem;
+    color: #fff;
+    font-size: 2.4rem;
+    line-height: 1rem;
+    display: block;
+    transform: rotate(90deg);
+    text-align: center;
+    /* outline: 1px solid #000; */
+}
+.account-item h3 {
+    text-align: center;
+    color: #fff;
+    position: relative;
+    bottom: -2rem;
+}
+.account-item sub {
+    display: block;
+    font-size: .7em;
+    opacity: 0.8;
+    font-family: var(--default-fontfamily);
+    font-weight: normal;
+}
+
+.dialog {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    background-color: rgba(43, 43, 43, 0.7);
+    z-index: 9999;
+    border-radius: var(--rounded);
+}
+
+#confirm-dialog {
+    bottom: 2rem;
+    padding: 0;
+}
+#confirm-dialog button {
+    display: block;
+    width: 100%;
+    padding: var(--default-padding);
+    border: 0;
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+.confirm-dialog__action {
+    color: var(--ui-red);
+    border-bottom: 1px solid var(--dark-fontcolor) !important;
+}
+.confirm-dialog__cancel {
+    color: var(--ui-blue);
+}
+
+#update-balance__dialog {
+    top: 4rem;
+    min-height: 12rem;
+    padding: var(--default-padding);
+    border-radius: calc(var(--rounded) + 1rem);
+}
+
+.dialog-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    background-color: var(--global-bgcolor);
+    opacity: 0.5;
+    z-index: 888;
+}
+
+#update-balance__value {
+    display: block;
+    font-family: var(--rounded-fontfamily);
+    font-size: 3rem;
+    text-align: center;
+    outline: none;
+    border: 0;
+    margin: 0 auto;
+    background-color: transparent;
+    padding: var(--default-padding);
+    width: 100%;
+    color: var(--default-fontcolor);
+    margin-top: 2rem;
+}
+
+#update-balance__account-name {
+    font-size: .8rem;
+    font-family: var(--default-fontfamily);
+    color: var(--default-fontcolor);
+    opacity: 0.8;
+    text-align: center;
+}
+
+
+.update-balance__buttoncon {
+    position: relative;
+    /* outline: 1px solid yellow; */
+    height: 5rem;
+}
+.update-balance__buttoncon button {
+    padding: .5rem 2rem;
+    position: absolute;
+    color: var(--default-fontcolor);
+    border: 0;
+    font-size: 2rem;
+    width: 8rem;
+    border-radius: calc(var(--rounded) + .5rem);
+    bottom: 5px;
+}
+#update-balance__add {
+    left: 1rem;
+}
+#update-balance__sub {
+    right: 1rem;
+}
+
+#notification {
+    text-align: center;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    padding: calc(var(--default-padding) * 2);
+    background-color: rgba(43, 43, 43, 0.7);
+    z-index: 9999;
+    color: var(--default-fontcolor);
+    border-radius: var(--rounded);
+}
+
+
+#add-edit-account-page input {
+    font-size: 1.5rem;
+    padding: var(--default-padding);
+    background-color: transparent;
+    outline: none;
+    border: 0;
+    border-bottom: 1px solid var(--dark-fontcolor);
+    text-align: center;
+    color: var(--default-fontcolor);
+    display: block;
+    width: 100%;
+}
+.add-edit-account__emoji {
+    font-size: 4rem !important;
+}
+
+.add-edit-account__itemcon {
+    padding: var(--default-padding);
+}
+.add-edit-account__itemcon label {
+    display: block;
+}
+
+.add-edit-account__ex-from-total {
+    display: inline-block !important;
+    width: 2rem !important;
+    height: 2rem;
+    vertical-align: middle;
+}
+
+.add-edit-account__colorpicker-con {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: .3rem;
+    padding-top: calc(var(--default-padding) / 2);
+}
+.add-edit-account__colorpicker-button {
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    padding: var(--default-padding);
+    border: 0;
+    margin: 0 auto;
+    margin-top: var(--default-padding);
+}
+.add-edit-account__colorpicker-button--selected {
+    border: 3px solid var(--default-fontcolor);
+}
+
+.add-edit-account__save-button,
+.add-edit-account__delete-button {
+    padding: calc(var(--default-padding) * 1.5);
+    font-size: 1rem;
+    border:0;
+    display: block;
+    color: var(--default-fontcolor);
+    width: 100%;
+    background-color: #333;
+    border-radius: 10px;
+}
+.add-edit-account__delete-button {
+    background-color: var(--ui-red);
+}
+
+.account-detail__top-card {
+    border-radius: var(--rounded);
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    margin: var(--default-padding);
+    margin-top: 0;
+}
+
+.account-detail__top-card h2 {
+    text-align: center;
+    font-size: var(--card-balance-fs);
+}
+.account-detail__top-card sup {
+    font-size: var(--card-balance-label-fs);
+    display: block;
+}
+.account-detail__top-card sup b {
+    position: relative;
+    font-size: 1.1rem;
+    top: -1px;
+}
+.account-detail__top-card sub {
+    font-size: .9rem;
+    display: block;
+    text-align: center;
+    opacity: .8;
+    font-family: var(--default-fontfamily);
+    font-weight: 200;
+}
+.account-detail__trans-con {
+    padding: var(--default-padding);
+}
+
+.account-detail__trans-table {
+    display: table;
+    border-collapse: collapse;
+    color: var(--default-fontcolor);
+    width: 100%;
+}
+.account-detail__trans-table th {
+    font-weight: bold;
+    padding: var(--default-padding);
+}
+.account-detail__trans-table tr {
+    border-bottom: 1px solid var(--dark-fontcolor);
+}
+.account-detail__trans-table td {
+    padding: var(--default-padding);
+}
+.account-detail__trans-delete {
+    padding-right: 0 !important;
+}
+.account-detail__trans-date {
+    text-align: left;
+    padding-left:0 !important;
+}
+.account-detail__trans-date sub {
+    display: block;
+    font-size: .8rem;
+    color: var(--default-fontcolor);
+    opacity: 0.8;
+    padding-top: .3rem;
+}
+.account-detail__trans-amount {
+    text-align: right;
+}
+.account-detail__trans--expense {
+    color: var(--ui-red);
+}
+.account-detail__trans--income {
+    color: var(--ui-green);
+}
+
+    </style>
+</head>
+<body class="in-frontpage-view">
+    <!-- Update account balance dialog -->
+    <cf-update-balance-dialog></cf-update-balance-dialog>
+    <!-- Confirm dialog -->
+    <cf-confirm-dialog></cf-confirm-dialog>
+    
+    <main>
+        <!-- front page -->
+        <section class="page" id="front-page">
+            <cf-front-page></cf-front-page>
+        </section>
+
+        <!-- add/edit account page -->
+        <section class="page page--hide" id="add-edit-account-page">
+            <cf-add-edit-account-page></cf-add-edit-account-page>
+        </section>
+
+        <!-- account detail page -->
+        <section class="page page--hide" id="account-detail-page">
+            <cf-account-detail-page></cf-account-detail-page>
+        </section>
+
+    </main>
+    <script>
+        const IS_SCRIPTABLE = "<<SCRIPTABLE>>" === 'scriptable';
+        let APP_DATA = (IS_SCRIPTABLE) ? "<<APP_DATA>>" : {
+            'accounts': []
+        };
+
+        // If not in Scriptable environment. On development mode.
+        if (!window.completion) { 
+            window.completion = (str) => {
+                try {
+                    localStorage.setItem('CF_APP_DATA', str);
+                } catch (err) {}              
+            }; 
+            // try-catch needed because ios webview throws "insecure operation" error on
+            // localStorage.
+            try {
+                if (window?.localStorage.getItem('CF_APP_DATA')) {
+                    APP_DATA = JSON.parse(localStorage.getItem('CF_APP_DATA'));
+                }
+            }
+            catch (err) {}
+        }    
+        
+        function sumOfTransactions(transactions = []) {
+            let total = 0;
+            transactions.forEach((t) => {
+                total = total + parseFloat(t.amount);
+            });
+            if (total < 0 || isNaN(total)) { return 0; }
+            return total;
+        }
+
+        function sumOfAccounts() {
+            let total = 0;
+            APP_DATA['accounts'].forEach((account) => {
+                if (!(account?.exFromTotal)) {
+                    total = total + sumOfTransactions(account.transactions);
+                }              
+            });
+            if (total < 0 || isNaN(total)) { return 0; }
+            return total;
+        }
+
+        function makeId(salt = '') {
+            let r = Math.random().toFixed(3).replace('0.','cf');
+            return salt + (new Date()).getTime() + r;
+        }
+
+        const saveData = (() => {
+            let debouncer = null;
+            return () => {
+                clearTimeout(debouncer);
+                debouncer = setTimeout(() => {
+                    completion(JSON.stringify(APP_DATA));
+                }, 1e3);
+            };
+        })();
+
+        function getAccountByIden(iden) {
+            let account = null;
+            APP_DATA['accounts'].forEach((a) => {
+                if (a.iden == iden) {
+                    account = a;
+                }
+            });
+            return account;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+           ;class CfAccountDetailPage extends HTMLElement {
+    constructor() {
+        super();
+        this.accountDetails = null;
+    }
+
+    connectedCallback() {
+        this.render();
+        this.events();
+    }
+
+    onPageShow(e) {
+        let accountId = e.detail.iden;
+        this.accountDetails = getAccountByIden(accountId);
+        // console.log(this.accountDetails);
+        this.populate();
+        this.$topNav?.removeEventListener('menuClick', this.onEditClicked.bind(this));
+        this.$topNav = this.querySelector('cf-top-navigation');
+        this.$topNav.addEventListener('menuClick', this.onEditClicked.bind(this));
+    }
+
+    renderTransactions(transactions) {
+        if (!transactions.length) {
+            return /*html*/ `<label class="empty">No transactions yet</label>`;
+        }
+        else {
+            return /*html*/ `
+                <table class="account-detail__trans-table">
+                    <thead>
+                        <th colspan="2" style="width:68%;text-align:left;">Transaction Date</th>
+                        <th style="width:20%;text-align:right;">Amount</th>
+                    </thead>
+                    <tbody>
+                        ${transactions.map((t) => {
+                            const fontClass = (t.amount < 0) ? 'account-detail__trans--expense' : 'account-detail__trans--income';
+                            return /*html*/ `
+                                <tr>
+                                    <td class="account-detail__trans-delete" data-transiden="${t.iden}">🗑</td>
+                                    <td class="account-detail__trans-date">
+                                        ${formatDate(t.timestamp)}
+                                        ${('note' in t && t.note.trim() !== '') ? `<sub>${t.note}</sub>` : ''}
+                                    </td>
+                                    <td class="account-detail__trans-amount ${fontClass}">${formatNumber(t.amount)}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+    }
+
+    populate() {
+        const bg = this.accountDetails.colorClass;
+        const emoji = this.accountDetails.emoji;
+        const balance = sumOfTransactions(this.accountDetails.transactions);
+        const name = this.accountDetails.name;
+        const desc = ('desc' in this.accountDetails && this.accountDetails.desc.trim() !== '') ? this.accountDetails.desc : '';
+
+        this.innerHTML = /*html*/ `
+            <cf-top-navigation onpage="account-detail-page"></cf-top-navigation>
+            <div class="account-detail__top-card ${bg}">
+                <h2>
+                    <sup><b>${emoji}</b> ${name}</sup>
+                    <span>₱${formatNumber(balance)}</span>
+                    <sub>${desc}</sub>
+                </h2>
+            </div>
+            <div class="account-detail__trans-con">
+                ${ this.renderTransactions(this.accountDetails.transactions) }
+            </div>
+        `;
+    }
+
+    onDeleteTransaction(e) {
+        const $me = e.target;
+        if ($me?.classList.contains('account-detail__trans-delete')) {
+            doConfirm('Delete Transaction',  () => {
+                const transIden = $me.getAttribute('data-transiden');
+                this.accountDetails = appData.deleteTransaction(this.accountDetails.iden, transIden);
+                this.querySelector('.account-detail__trans-con').innerHTML = this.renderTransactions(this.accountDetails.transactions);
+                const balance = sumOfTransactions(this.accountDetails.transactions);
+                this.querySelector('h2 span').textContent = `₱${formatNumber(balance)}`;
+            });           
+        }
+        
+    }
+
+    onEditClicked() {
+        //console.log(this.accountDetails);
+        routeTo('add-edit-account-page', this.accountDetails);
+    }
+
+    events() { 
+        this.addEventListener('onPageShow', this.onPageShow.bind(this));
+        this.addEventListener('click', this.onDeleteTransaction.bind(this));
+    }
+
+    render() {
+        this.innerHTML = /*html*/ `
+            <label class="empty">Loading...</label> 
+        `;
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('onPageShow', this.onPageShow.bind(this));
+        this.removeEventListener('click', this.onDeleteTransaction.bind(this));
+    }
+}
+
+customElements.define('cf-account-detail-page', CfAccountDetailPage);
+
+;
+class CfAccountTile extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        this.render();
+        this.$moreDetailsButton = this.querySelector('.account-item__details-button');
+        this.$accountItemCon = this.querySelector('.account-item');
+        this.$updateBalanceDialog = document.querySelector('cf-update-balance-dialog');
+        this.$h3 = this.querySelector('h3');
+        this.events();   
+    }
+
+    onMoreDetailsClicked(e) {
+        routeTo('account-detail-page', {
+            iden: this.iden
+        }); 
+    }
+
+    onUpdateBalance() {
+        triggerEvent(this.$updateBalanceDialog, 'show', {
+            iden: this.iden
+        });
+    }
+
+    events() {
+        this.$moreDetailsButton.addEventListener('click', this.onMoreDetailsClicked.bind(this));
+        this.$h3.addEventListener('click', this.onUpdateBalance.bind(this));
+    }
+
+    render() {
+        this.iden = this.getAttribute('iden');
+        const bg = this.getAttribute('bg');
+        const emoji = this.getAttribute('emoji');
+        const balance = this.getAttribute('balance');
+        const name = this.getAttribute('name');
+        const exFromTotal = pint(this.getAttribute('exfromtotal'));
+        this.innerHTML = /*html*/`
+            <div class="account-item no-select ${bg} ${(exFromTotal) ? 'account-item--excluded' : ''}" data-iden="${this.iden}">
+                <div class="account-item__emoji ">${emoji}</div>
+                <div class="account-item__details-button">...</div>
+                <h3>
+                    ₱${formatNumber(balance)}
+                    <sub>${name}</sub>
+                </h3>
+            </div>
+        `;
+    }
+
+    diconnectedCallback() {
+        this.$moreDetailsButton.removeEventListener('click', this.onMoreDetailsClicked.bind(this));
+        this.$h3.removeEventListener('click', this.onUpdateBalance.bind(this));
+    }
+}
+customElements.define('cf-account-tile', CfAccountTile);;
+
+class CfAddEditAccountPage extends HTMLElement {
+    constructor() {
+        super();
+        this.accountDetails = null;
+    }
+
+    connectedCallback() {
+        this.render();
+        this.$colorPicker = this.querySelector('cf-colorpicker');
+        this.$accountName = this.querySelector('.add-edit-account__name');
+        this.$accountDesc = this.querySelector('.add-edit-account__desc');
+        this.$accountEmoji = this.querySelector('.add-edit-account__emoji');
+        this.$balance = this.querySelector('.add-edit-account__init-balance');
+        this.$exFromTotal = this.querySelector('.add-edit-account__ex-from-total');
+        this.$saveButton = this.querySelector('.add-edit-account__save-button');
+        this.$deleteButton = this.querySelector('.add-edit-account__delete-button');
+        this.selectedColorClass = null;
+        this.events();
+        
+    }
+
+    reset() {
+        this.accountDetails = null;
+        this.$accountName.value = '';
+        this.$accountDesc.value = '';
+        this.$accountEmoji.value = '';
+        this.$balance.value = '';
+        this.$exFromTotal.checked = false;
+        this.$balance.parentNode.classList.remove('hide');
+        this.selectedColorClass = null;
+        this.$saveButton.textContent = 'Done';
+        this.$deleteButton.parentNode.classList.add('hide');
+        triggerEvent(this.$colorPicker, 'reset');
+    }
+
+    populate() {
+        this.$accountName.value = this.accountDetails.name;
+        this.$accountDesc.value = this.accountDetails.desc;
+        this.$accountEmoji.value = this.accountDetails.emoji;
+        this.$balance.value = '';
+        this.$exFromTotal.checked = !!this.accountDetails.exFromTotal;
+        this.$balance.parentNode.classList.add('hide');
+        this.selectedColorClass = this.accountDetails.colorClass;
+        this.$saveButton.textContent = 'Update';
+        this.$deleteButton.parentNode.classList.remove('hide');
+        this.$colorPicker
+            .querySelector(`button[data-color-class="${this.accountDetails.colorClass}"]`)
+            ?.click();
+    }
+
+    onPageShow(e) {
+        this.reset();
+        if (e?.detail) {
+            this.accountDetails = e.detail;
+            this.populate();
+        }
+    }
+
+    onColorSelected(e) {
+        this.selectedColorClass = e.detail.colorClass;
+    }
+
+    validate() {
+        let name = this.$accountName.value,
+            emoji = this.$accountEmoji.value,
+            colorClass = this.selectedColorClass; 
+        if (name.trim() === '' || emoji.trim() === '' || !colorClass) {
+            return false;
+        }
+        return true;
+    }
+
+    onDelete(e) {
+        doConfirm('Delete Account', () => {
+            //console.log(this.accountDetails);
+            appData.deleteAccount(this.accountDetails.iden);
+            routeTo('front-page');
+        });
+    }
+
+    onSave(e) {
+        e.preventDefault();
+        let name = this.$accountName.value,
+            desc = this.$accountDesc.value,
+            emoji = this.$accountEmoji.value,
+            initialBalance = this.$balance.value,
+            exFromTotal = this.$exFromTotal.checked,
+            colorClass = this.selectedColorClass;    
+        if (!this.validate()) {
+            notify('Some required information are missing.');
+            return;
+        }
+        if (this.accountDetails === null) {
+            appData.addAccount({
+                iden: makeId('a'),
+                name,
+                desc,
+                emoji, 
+                colorClass,
+                exFromTotal,
+                transactions: [
+                    {
+                        iden: makeId('t'),
+                        timestamp: (new Date()).getTime(),
+                        amount: pfloat(initialBalance),
+                        note: 'Initial balance'
+                    }
+                ]
+            });
+        }
+        else {
+            appData.updateAccount(this.accountDetails.iden, {
+                iden: this.accountDetails.iden,
+                name,
+                desc,
+                emoji, 
+                colorClass,
+                exFromTotal,
+                transactions: this.accountDetails.transactions
+            });
+        }
+        this.reset();
+        routeTo('front-page');
+    }
+
+    events() {
+        this.addEventListener('onPageShow', this.onPageShow.bind(this));
+        this.$colorPicker.addEventListener('onColorSelected', this.onColorSelected.bind(this));
+        this.$saveButton.addEventListener('click', this.onSave.bind(this));
+        this.$deleteButton.addEventListener('click', this.onDelete.bind(this));
+    }   
+
+    render() {
+        this.innerHTML = /*html*/ `
+            <cf-top-navigation onpage="add-edit-account-page"></cf-top-navigation>
+            <div class="add-edit-account__itemcon">
+                <label>Name</label>
+                <input type="text" class="add-edit-account__name" />
+            </div>
+            <div class="add-edit-account__itemcon">
+                <label>Description</label>
+                <input type="text" class="add-edit-account__desc" />
+            </div>
+            <div class="add-edit-account__itemcon">
+                <label>Emoji</label>
+                <input type="text" class="add-edit-account__emoji" maxlength="5"/>
+            </div>
+            <div class="add-edit-account__itemcon">
+                <label>Initial Balance</label>
+                <input type="number" inputmode="decimal" class="add-edit-account__init-balance" />
+            </div>
+            <div class="add-edit-account__itemcon">
+                <label>Color</label>
+                <cf-colorpicker></cf-colorpicker>
+            </div>
+            <div class="add-edit-account__itemcon">
+                <label>
+                    <input type="checkbox" class="add-edit-account__ex-from-total" />
+                    Exclude From Total 
+                </label>
+            </div>
+            <div class="add-edit-account__itemcon"> 
+                <button class="add-edit-account__save-button">Done</button>
+            </div>
+            <div class="add-edit-account__itemcon hide"> 
+                <button class="add-edit-account__delete-button">Delete Account</button>
+            </div>
+        `;
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('onPageShow', this.onPageShow);
+        this.$colorPicker.removeEventListener('onColorSelected', this.onColorSelected);
+        this.$saveButton.removeEventListener('click', this.onSave);
+        this.$deleteButton.removeEventListener('click', this.onDelete.bind(this));
+    }
+}
+customElements.define('cf-add-edit-account-page', CfAddEditAccountPage);;
+
+class CfColorPicker extends HTMLElement {
+    constructor() {
+        super();
+        this.colors = [
+            'abg-light-blue', 
+            'abg-blue',
+            'abg-green',
+            'abg-yellow-green',
+            'abg-orange',
+            'abg-dark-orange',
+            'abg-dark-purple',
+            'abg-red',
+            'abg-grey'
+        ];
+    }
+
+    connectedCallback() {
+        this.render();
+        this.events();
+    }
+
+    removeAnySelected() {
+        this.querySelectorAll('.add-edit-account__colorpicker-button').forEach((b) => {
+            b.classList.remove('add-edit-account__colorpicker-button--selected');
+        });
+    }
+
+    onColorClicked(e) {
+        e.preventDefault();
+        const $target = e.target;        
+        if ($target?.classList.contains('add-edit-account__colorpicker-button')) {
+            this.removeAnySelected();
+            $target.classList.add('add-edit-account__colorpicker-button--selected');
+            triggerEvent(this, 'onColorSelected', {
+                colorClass: $target.getAttribute('data-color-class')
+            });   
+        }              
+    }
+
+    onReset() {
+        this.removeAnySelected();
+    }
+
+    events() {
+        this.addEventListener('click', this.onColorClicked.bind(this));
+        this.addEventListener('reset', this.onReset.bind(this));
+    }
+
+    render() {
+        this.innerHTML = /*html*/ `
+            <div class="add-edit-account__colorpicker-con">
+                ${this.colors.map((color) => /*html*/`<button class="add-edit-account__colorpicker-button ${color}" data-color-class="${color}"></button>`).join('')}
+            </div>
+        `;
+    }
+
+    disconnectedCallback() {
+        this.addEventListener('click', this.onColorClicked.bind(this));
+        this.removeEventListener('reset', this.onReset.bind(this));
+    }
+}
+
+customElements.define('cf-colorpicker', CfColorPicker);;
+class CfConfirmDialog extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        this.render();
+        this.$backDrop = this.querySelector('.dialog-backdrop');
+        this.$dialog = byId('confirm-dialog');
+        this.events();
+    }
+
+    hide() {
+        this.$backDrop.classList.add('hide');
+        this.$dialog.classList.add('hide');
+    }
+
+    show() {
+        this.$backDrop.classList.remove('hide');
+        this.$dialog.classList.remove('hide');
+    }
+
+    confirmed() {
+        triggerEvent(this, 'confirm');
+    }
+
+    onButtonClicked(e) {
+        e.preventDefault();
+        const $me = e.target;
+        if ($me?.classList.contains('confirm-dialog__action')) {
+            e.stopPropagation();
+            this.confirmed();
+            this.hide();
+        }
+        else if ($me?.classList.contains('confirm-dialog__cancel')) {
+            e.stopPropagation();
+            this.hide();
+        }
+    }
+
+    onShow(e) {
+        let label = e?.detail?.label ?? 'Delete';
+        this.querySelector('button.confirm-dialog__action').textContent = label;
+        this.show();
+    }
+
+    onHide() {
+        this.hide();
+    }
+
+    events() {
+        this.addEventListener('click', this.onButtonClicked.bind(this));
+        this.addEventListener('show', this.onShow.bind(this));
+        this.$backDrop.addEventListener('click', this.onHide.bind(this));
+    }
+
+    render() {
+
+        this.innerHTML = /*html*/`
+            <div id="confirm-dialog" class="blur sml-shadow dialog hide">
+                <button class="confirm-dialog__action">Delete</button>
+                <button class="confirm-dialog__cancel">Cancel</button>
+            </div>
+            <div class="dialog-backdrop hide"></div>
+        `;
+    }
+
+    diconnectedCallback() {
+        this.removeEventListener('click', this.onButtonClicked.bind(this));
+        this.removeEventListener('show', this.onShow.bind(this));
+        this.$backDrop.removeEventListener('click', this.onHide.bind(this));
+    }
+}
+customElements.define('cf-confirm-dialog', CfConfirmDialog);
+
+function doConfirm(label = 'Delete', callback = null) {
+    callback = callback ?? (() => {});
+    const $confirmElement = document.querySelector('cf-confirm-dialog');
+    function confirm() {
+        callback();
+        $confirmElement?.removeEventListener('confirm', confirm);
+    }
+    $confirmElement?.removeEventListener('confirm', confirm);
+    triggerEvent($confirmElement, 'show', {
+        label
+    });
+    $confirmElement?.addEventListener('confirm', confirm);
+};
+class CfFrontPage extends HTMLElement {
+
+    constructor() {
+        super();
+        this.lastScrollPos = 0;
+    }
+
+    connectedCallback() {
+        this.render();
+        this.$addButton = byId('add-account-button');
+        this.$accountsCon = this.querySelector('.accounts-con');
+        this.$blockquote = this.querySelector('blockquote');
+        this.populate();
+        this.events();
+    }
+
+    populate() {
+        this.updateTotalBalance(sumOfAccounts());
+        this.updateAccountsTiles(APP_DATA['accounts']);
+    }
+
+    updateTotalBalance(total) {
+        this.querySelector('h1').innerHTML = /*html*/ `
+            <sup>Total Balance</sup>
+            ₱${formatNumber(total)}
+        `;
+    }
+
+    updateAccountsTiles(accounts) {
+        if (!accounts.length) {
+            this.querySelector('.accounts-con').innerHTML = /*html*/`<label class="empty">No accounts yet</label>`;
+        }
+        else {
+            let tilesMarkUp = '';
+
+            tilesMarkUp += accounts.filter(({exFromTotal }) => {
+                if (exFromTotal) {
+                    return false;
+                }
+                return true;
+            }).map(({ iden, colorClass, emoji, name, transactions }) => {
+                let balance = sumOfTransactions(transactions);
+                //console.log(balance);
+                return /*html*/`
+                    <cf-account-tile 
+                        iden="${iden}"
+                        bg="${colorClass}"
+                        emoji="${emoji}"
+                        name="${name}"
+                        balance="${balance}"
+                        exfromtotal="0"
+                    ></cf-account-tile>
+                `;
+            }).join('');
+
+            tilesMarkUp += accounts.filter(({exFromTotal }) => {
+                if (!exFromTotal) {
+                    return false;
+                }
+                return true;
+            }).map(({ iden, colorClass, emoji, name, transactions }) => {
+                let balance = sumOfTransactions(transactions);
+                //console.log(balance);
+                return /*html*/`
+                    <cf-account-tile 
+                        iden="${iden}"
+                        bg="${colorClass}"
+                        emoji="${emoji}"
+                        name="${name}"
+                        balance="${balance}"
+                        exfromtotal="1"
+                    ></cf-account-tile>
+                `;
+            }).join('');
+
+            this.querySelector('.accounts-con').innerHTML = tilesMarkUp;
+        }
+    }
+
+    onPageShow(e) {
+        this.populate();
+    }
+
+    onAddAccountClick(e) {
+        e.preventDefault();
+        routeTo('add-edit-account-page');
+    }
+
+    refresh() {
+        this.populate();
+    }
+
+    events() {
+        this.addEventListener('onPageShow', this.onPageShow.bind(this));
+        this.$addButton.addEventListener('click', this.onAddAccountClick.bind(this));
+        this.addEventListener('refresh', this.refresh.bind(this));
+    }
+
+    render() {
+        
+        this.innerHTML = /*html*/ `
+            <div class="front-page-scroll-area-con">
+                <div class="top-section no-select">
+                    <button id="add-account-button" class="sml-shadow">Add Account</button>
+                    <h1></h1>
+                </div>   
+                <div style="padding-bottom: 10rem;">
+                    <div class="accounts-con"></div>
+                    <blockquote>
+                        "Spend less than you make."
+                    </blockquote>
+                </div>              
+            </div>                  
+        `;
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('onPageShow', this.onPageShow);
+        this.$addButton.removeEventListener('click', this.onAddAccountClick);
+        this.removeEventListener('refresh', this.refresh.bind(this));
+    }
+}
+
+customElements.define('cf-front-page', CfFrontPage);;
+class CfTopNavigation extends HTMLElement {
+
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        this.render();
+        this.events();
+    }
+
+    onButtonsClicked(e) {
+        const $target = e.target;
+        if ($target?.classList.contains('top-navigation__back-button')) {
+            routeTo('front-page');
+            return;
+        }
+        else if ($target?.classList.contains('top-navigation__menu-button')) {
+            triggerEvent(this, 'menuClick');
+            return;
+        }
+    }
+
+    events() {
+        this.addEventListener('click', this.onButtonsClicked.bind(this));
+    }
+
+    render() {
+        const pageShown = this.getAttribute('onpage');
+        let menuLabel = '';
+        if (pageShown === 'account-detail-page') {
+            menuLabel = 'Edit';
+        }
+        // ... add more menu labels here per page.
+        this.innerHTML = /*html*/ `
+            <nav class="top-navigation">
+                <div>
+                    <button class="top-navigation__back-button"></button>
+                </div>
+                <div>
+                    <button class="top-navigation__menu-button">${menuLabel}</button>
+                </div>
+            </nav>
+        `;
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('click', this.onButtonsClicked.bind(this));
+    }
+}
+
+customElements.define('cf-top-navigation', CfTopNavigation);;
+
+class CfUpdateBalanceDialog extends HTMLElement {
+    constructor() {
+        super();
+        this.currentAccount = null;
+    }
+
+    connectedCallback() {
+        this.render();
+        this.$balanceInput = byId('update-balance__value');
+        this.$accountNameLabel = byId('update-balance__account-name');
+        this.$backDrop = this.querySelector('.dialog-backdrop');
+        this.$dialog = byId('update-balance__dialog');
+        this.$addButton = byId('update-balance__add');
+        this.$subButton = byId('update-balance__sub');
+
+        // (2021-11-12) rTODO: Add Notes field
+
+        this.events();
+    }
+
+    onShow(e) {
+        const { iden } = e.detail;
+        //console.log(iden);
+        this.currentAccount = appData.getAccountByIden(iden);
+        this.$accountNameLabel.textContent = this.currentAccount.name;
+        setTimeout(() => {
+            this.$balanceInput.focus();
+        }, 300);
+        this.show();
+    }
+
+    onHide() {
+        this.hide();
+    }
+
+    hide() {
+        this.$backDrop.classList.add('hide');
+        this.$dialog.classList.add('hide');
+        this.currentAccount = null;
+        this.$accountNameLabel.textContent = '';
+        this.$balanceInput.value = '';
+        window.scrollTo(0, 0);
+    }
+
+    show() {
+        this.$backDrop.classList.remove('hide');
+        this.$dialog.classList.remove('hide');
+    }
+
+    _getBalanceValue() {
+        let val = pfloat(this.$balanceInput.value);
+        if (val < 0) {
+            // make into positive number
+            val = val * -1;
+        }
+        return val;
+    }
+
+    save(data) {
+        this.currentAccount.transactions.push(data);
+        appData.updateAccount(this.currentAccount.iden, this.currentAccount);
+        triggerEvent(document.querySelector('cf-front-page'), 'refresh');
+        this.hide();
+        window.scrollTo(0, 0);
+    }
+
+    onAdd() {
+        // LM: 2022-04-08 15:34:24 [Confetti celebration!]
+        requestAnimationFrame(() => {
+            window.confetti({
+                particleCount: 500,
+                spread: 130
+            })
+        });
+        if (this.$balanceInput.value.trim() === '') {
+            this.hide();
+            return;
+        }
+        let val = this._getBalanceValue();
+        let accountName = this.currentAccount.name;
+        this.save({
+            iden: makeId('t'),
+            timestamp: (new Date()).getTime(),
+            amount: val,
+            note: ''
+        });
+        
+        notify(`Added <i class="account-detail__trans--income">${formatNumber(val)}</i> to ${accountName} account`, 3e3);
+    }
+
+    onSubtract() {
+        if (this.$balanceInput.value.trim() === '') {
+            this.hide();
+            return;
+        }
+        let val = this._getBalanceValue();
+        let accountName = this.currentAccount.name;
+        this.save({
+            iden: makeId('t'),
+            timestamp: (new Date()).getTime(),
+            amount: (val * -1),
+            note: ''
+        });
+        notify(`Subtracted <i class="account-detail__trans--expense">-${formatNumber(val)}</i> from ${accountName} account`, 3e3);
+    }
+
+    events() {
+        this.$backDrop.addEventListener('click', this.onHide.bind(this));
+        this.addEventListener('show', this.onShow.bind(this));
+        this.$addButton.addEventListener('click', this.onAdd.bind(this));
+        this.$subButton.addEventListener('click', this.onSubtract.bind(this));
+    }
+
+    render() {
+        this.innerHTML = /*html*/ `
+            <div id="update-balance__dialog" class="blur sml-shadow hide dialog">
+                <input type="number" inputmode="decimal" value="" placeholder="0.00" id="update-balance__value"/>
+                <div id="update-balance__account-name">---</div>
+                <div class="update-balance__buttoncon">
+                    <button id="update-balance__add" class="abg-green">+</button>
+                    <button id="update-balance__sub" class="abg-red">-</button>
+                </div>
+            </div>
+            <div class="dialog-backdrop hide"></div>
+        `;
+    }
+
+    disconnectedCallback() {
+        this.$backDrop.removeEventListener('click', this.onHide.bind(this));
+        this.removeEventListener('show', this.onShow.bind(this));
+        this.$addButton.removeEventListener('click', this.onAdd.bind(this));
+        this.$subButton.removeEventListener('click', this.onSubtract.bind(this));
+
+    }
+}
+
+customElements.define('cf-update-balance-dialog', CfUpdateBalanceDialog);;window.appData = {
+
+    addAccount(data) {
+        APP_DATA['accounts'].push(data);
+        saveData();
+    },
+
+    getAccountByIden(iden) {
+        let account = null;
+        APP_DATA['accounts'].forEach((a) => {
+            if (a.iden === iden) {
+                account = a;
+            }
+        });
+        return account;
+    },
+
+    sortTransactionsByTimestamp(transactions) {
+        transactions.sort((a, b) => {
+            if (a.timestamp < b.timestamp) {
+                return 1;
+            }
+            if (a.timestamp > b.timestamp) {
+                return -1;
+            }
+            return 0;
+        });
+        return transactions;
+    },
+
+    updateAccount(iden, data) {
+        APP_DATA['accounts'].forEach((a, i) => {
+            if (a.iden === iden) {
+                APP_DATA['accounts'][i] = data;
+                APP_DATA['accounts'][i]['transactions'] = appData.sortTransactionsByTimestamp(data.transactions);
+            }
+        });
+        saveData();
+    },
+
+    deleteTransaction(accountIden, transactionIden) {
+        let account = null;
+        APP_DATA['accounts'].forEach((a, i) => {
+            if (a.iden === accountIden) {
+                APP_DATA['accounts'][i]['transactions'] = appData.sortTransactionsByTimestamp(a.transactions.filter((t) => {
+                    return t.iden !== transactionIden;
+                }));
+                account = APP_DATA['accounts'][i];
+            }
+        });
+        saveData();
+        return account;
+    },
+
+    deleteAccount(accountIden) {
+        APP_DATA['accounts'] = APP_DATA['accounts'].filter((a, i) => {
+            return a.iden !== accountIden;
+        });
+        saveData();
+    }
+
+};;/**
+ * Minified by jsDelivr using Terser v5.10.0.
+ * Original file: /npm/canvas-confetti@1.5.1/dist/confetti.browser.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+!function(t,e){!function t(e,n,a,i){var o=!!(e.Worker&&e.Blob&&e.Promise&&e.OffscreenCanvas&&e.OffscreenCanvasRenderingContext2D&&e.HTMLCanvasElement&&e.HTMLCanvasElement.prototype.transferControlToOffscreen&&e.URL&&e.URL.createObjectURL);function r(){}function l(t){var a=n.exports.Promise,i=void 0!==a?a:e.Promise;return"function"==typeof i?new i(t):(t(r,r),null)}var c,s,u,d,f,h,m,g,b,v=(u=Math.floor(1e3/60),d={},f=0,"function"==typeof requestAnimationFrame&&"function"==typeof cancelAnimationFrame?(c=function(t){var e=Math.random();return d[e]=requestAnimationFrame((function n(a){f===a||f+u-1<a?(f=a,delete d[e],t()):d[e]=requestAnimationFrame(n)})),e},s=function(t){d[t]&&cancelAnimationFrame(d[t])}):(c=function(t){return setTimeout(t,u)},s=function(t){return clearTimeout(t)}),{frame:c,cancel:s}),p=(g={},function(){if(h)return h;if(!a&&o){var e=["var CONFETTI, SIZE = {}, module = {};","("+t.toString()+")(this, module, true, SIZE);","onmessage = function(msg) {","  if (msg.data.options) {","    CONFETTI(msg.data.options).then(function () {","      if (msg.data.callback) {","        postMessage({ callback: msg.data.callback });","      }","    });","  } else if (msg.data.reset) {","    CONFETTI.reset();","  } else if (msg.data.resize) {","    SIZE.width = msg.data.resize.width;","    SIZE.height = msg.data.resize.height;","  } else if (msg.data.canvas) {","    SIZE.width = msg.data.canvas.width;","    SIZE.height = msg.data.canvas.height;","    CONFETTI = module.exports.create(msg.data.canvas);","  }","}"].join("\n");try{h=new Worker(URL.createObjectURL(new Blob([e])))}catch(t){return void 0!==typeof console&&"function"==typeof console.warn&&console.warn("🎊 Could not load worker",t),null}!function(t){function e(e,n){t.postMessage({options:e||{},callback:n})}t.init=function(e){var n=e.transferControlToOffscreen();t.postMessage({canvas:n},[n])},t.fire=function(n,a,i){if(m)return e(n,null),m;var o=Math.random().toString(36).slice(2);return m=l((function(a){function r(e){e.data.callback===o&&(delete g[o],t.removeEventListener("message",r),m=null,i(),a())}t.addEventListener("message",r),e(n,o),g[o]=r.bind(null,{data:{callback:o}})}))},t.reset=function(){for(var e in t.postMessage({reset:!0}),g)g[e](),delete g[e]}}(h)}return h}),y={particleCount:50,angle:90,spread:45,startVelocity:45,decay:.9,gravity:1,drift:0,ticks:200,x:.5,y:.5,shapes:["square","circle"],zIndex:100,colors:["#26ccff","#a25afd","#ff5e7e","#88ff5a","#fcff42","#ffa62d","#ff36ff"],disableForReducedMotion:!1,scalar:1};function M(t,e,n){return function(t,e){return e?e(t):t}(t&&null!=t[e]?t[e]:y[e],n)}function w(t){return t<0?0:Math.floor(t)}function x(t){return parseInt(t,16)}function C(t){return t.map(k)}function k(t){var e=String(t).replace(/[^0-9a-f]/gi,"");return e.length<6&&(e=e[0]+e[0]+e[1]+e[1]+e[2]+e[2]),{r:x(e.substring(0,2)),g:x(e.substring(2,4)),b:x(e.substring(4,6))}}function I(t){t.width=document.documentElement.clientWidth,t.height=document.documentElement.clientHeight}function S(t){var e=t.getBoundingClientRect();t.width=e.width,t.height=e.height}function T(t,e,n,o,r){var c,s,u=e.slice(),d=t.getContext("2d"),f=l((function(e){function l(){c=s=null,d.clearRect(0,0,o.width,o.height),r(),e()}c=v.frame((function e(){!a||o.width===i.width&&o.height===i.height||(o.width=t.width=i.width,o.height=t.height=i.height),o.width||o.height||(n(t),o.width=t.width,o.height=t.height),d.clearRect(0,0,o.width,o.height),u=u.filter((function(t){return function(t,e){e.x+=Math.cos(e.angle2D)*e.velocity+e.drift,e.y+=Math.sin(e.angle2D)*e.velocity+e.gravity,e.wobble+=e.wobbleSpeed,e.velocity*=e.decay,e.tiltAngle+=.1,e.tiltSin=Math.sin(e.tiltAngle),e.tiltCos=Math.cos(e.tiltAngle),e.random=Math.random()+2,e.wobbleX=e.x+10*e.scalar*Math.cos(e.wobble),e.wobbleY=e.y+10*e.scalar*Math.sin(e.wobble);var n=e.tick++/e.totalTicks,a=e.x+e.random*e.tiltCos,i=e.y+e.random*e.tiltSin,o=e.wobbleX+e.random*e.tiltCos,r=e.wobbleY+e.random*e.tiltSin;return t.fillStyle="rgba("+e.color.r+", "+e.color.g+", "+e.color.b+", "+(1-n)+")",t.beginPath(),"circle"===e.shape?t.ellipse?t.ellipse(e.x,e.y,Math.abs(o-a)*e.ovalScalar,Math.abs(r-i)*e.ovalScalar,Math.PI/10*e.wobble,0,2*Math.PI):function(t,e,n,a,i,o,r,l,c){t.save(),t.translate(e,n),t.rotate(o),t.scale(a,i),t.arc(0,0,1,r,l,c),t.restore()}(t,e.x,e.y,Math.abs(o-a)*e.ovalScalar,Math.abs(r-i)*e.ovalScalar,Math.PI/10*e.wobble,0,2*Math.PI):(t.moveTo(Math.floor(e.x),Math.floor(e.y)),t.lineTo(Math.floor(e.wobbleX),Math.floor(i)),t.lineTo(Math.floor(o),Math.floor(r)),t.lineTo(Math.floor(a),Math.floor(e.wobbleY))),t.closePath(),t.fill(),e.tick<e.totalTicks}(d,t)})),u.length?c=v.frame(e):l()})),s=l}));return{addFettis:function(t){return u=u.concat(t),f},canvas:t,promise:f,reset:function(){c&&v.cancel(c),s&&s()}}}function E(t,n){var a,i=!t,r=!!M(n||{},"resize"),c=M(n,"disableForReducedMotion",Boolean),s=o&&!!M(n||{},"useWorker")?p():null,u=i?I:S,d=!(!t||!s)&&!!t.__confetti_initialized,f="function"==typeof matchMedia&&matchMedia("(prefers-reduced-motion)").matches;function h(e,n,i){for(var o,r,l,c,s,d=M(e,"particleCount",w),f=M(e,"angle",Number),h=M(e,"spread",Number),m=M(e,"startVelocity",Number),g=M(e,"decay",Number),b=M(e,"gravity",Number),v=M(e,"drift",Number),p=M(e,"colors",C),y=M(e,"ticks",Number),x=M(e,"shapes"),k=M(e,"scalar"),I=function(t){var e=M(t,"origin",Object);return e.x=M(e,"x",Number),e.y=M(e,"y",Number),e}(e),S=d,E=[],F=t.width*I.x,N=t.height*I.y;S--;)E.push((o={x:F,y:N,angle:f,spread:h,startVelocity:m,color:p[S%p.length],shape:x[(c=0,s=x.length,Math.floor(Math.random()*(s-c))+c)],ticks:y,decay:g,gravity:b,drift:v,scalar:k},r=void 0,l=void 0,r=o.angle*(Math.PI/180),l=o.spread*(Math.PI/180),{x:o.x,y:o.y,wobble:10*Math.random(),wobbleSpeed:Math.min(.11,.1*Math.random()+.05),velocity:.5*o.startVelocity+Math.random()*o.startVelocity,angle2D:-r+(.5*l-Math.random()*l),tiltAngle:(.5*Math.random()+.25)*Math.PI,color:o.color,shape:o.shape,tick:0,totalTicks:o.ticks,decay:o.decay,drift:o.drift,random:Math.random()+2,tiltSin:0,tiltCos:0,wobbleX:0,wobbleY:0,gravity:3*o.gravity,ovalScalar:.6,scalar:o.scalar}));return a?a.addFettis(E):(a=T(t,E,u,n,i)).promise}function m(n){var o=c||M(n,"disableForReducedMotion",Boolean),m=M(n,"zIndex",Number);if(o&&f)return l((function(t){t()}));i&&a?t=a.canvas:i&&!t&&(t=function(t){var e=document.createElement("canvas");return e.style.position="fixed",e.style.top="0px",e.style.left="0px",e.style.pointerEvents="none",e.style.zIndex=t,e}(m),document.body.appendChild(t)),r&&!d&&u(t);var g={width:t.width,height:t.height};function b(){if(s){var e={getBoundingClientRect:function(){if(!i)return t.getBoundingClientRect()}};return u(e),void s.postMessage({resize:{width:e.width,height:e.height}})}g.width=g.height=null}function v(){a=null,r&&e.removeEventListener("resize",b),i&&t&&(document.body.removeChild(t),t=null,d=!1)}return s&&!d&&s.init(t),d=!0,s&&(t.__confetti_initialized=!0),r&&e.addEventListener("resize",b,!1),s?s.fire(n,g,v):h(n,g,v)}return m.reset=function(){s&&s.reset(),a&&a.reset()},m}function F(){return b||(b=E(null,{useWorker:!0,resize:!0})),b}n.exports=function(){return F().apply(this,arguments)},n.exports.reset=function(){F().reset()},n.exports.create=E}(function(){return void 0!==t?t:"undefined"!=typeof self?self:this||{}}(),e,!1),t.confetti=e.exports}(window,{});
+;
+
+const $notification = document.createElement('div');
+$notification.id = 'notification';
+$notification.className = 'blur sml-shadow hide';
+document.body.append($notification);
+
+const notify = (() => {
+    let timer = null;
+    const $n = byId('notification');
+    function hide() {
+        clearTimeout(timer);
+        $n.classList.add('hide');
+        $n.innerHTML = '';
+    }
+    $n.addEventListener('click', () => {
+        hide();
+    });
+    return (msg, duration = 5e3) => {
+        clearTimeout(timer);
+        $n.innerHTML = msg;
+        $n.classList.remove('hide');
+        timer = setTimeout(() => {
+            hide();
+        }, duration);
+    };
+})();;
+function routeTo(pageId, data = null) {
+    document.querySelectorAll('.page').forEach((page) => {
+        page.classList.add('page--hide');
+    });
+    const $page = byId(pageId);
+
+    if (pageId === 'front-page') {
+        document.body.classList.add('in-frontpage-view');
+    }
+    else {
+        document.body.classList.remove('in-frontpage-view');
+    }
+
+    //console.log($page.children[0].tagName);
+    window.scrollTo(0, 0);
+    triggerEvent($page.children[0], 'onPageShow', data);
+    $page.classList.remove('page--hide');
+}
+        });
+    </script>
+</body>
+</html>

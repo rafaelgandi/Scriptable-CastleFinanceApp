@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>castlefinance</title>
+    <!-- Mobile viewport optimization h5bp.com/ad -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- iOS web app, delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <script>
+        // The script prevents links from opening in mobile safari. https://gist.github.com/1042026
+        (function (a, b, c) { if (c in b && b[c]) { var d, e = a.location, f = /^(a|html)$/i; a.addEventListener("click", function (a) { d = a.target; while (!f.test(d.nodeName)) d = d.parentNode; "href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host)) && (a.preventDefault(), e.href = d.href) }, !1) } })(document, window.navigator, "standalone")
+    </script>
+    <script>
+        window.onerror = (e) => {
+            console.log(e);
+        };
+        function pint(v) {
+            if (typeof v === 'string' && v.trim() === '') { return 0; }
+            return parseInt(v, 10);
+        }
+        function pfloat(v) {
+            if (typeof v === 'string' && v.trim() === '') { return 0; }
+            let num = parseFloat(v);
+            if (num < 0) { return 0; }
+            return parseFloat(num.toFixed(2));
+        }
+        function byId(id) {
+            return document.getElementById(id);
+        }
+        function formatNumber(num) {
+            num = parseFloat(num);
+            // See: https://blog.abelotech.com/posts/number-currency-formatting-javascript/
+            return num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        }
+        function triggerEvent(parent, eventName, data = null) {
+            parent.dispatchEvent(new CustomEvent(eventName, {
+                detail: data
+            }));
+        }
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            let date = d.getDate();
+            let year = d.getFullYear();
+            let month = d.getMonth() + 1;
+            if (date < 10) {
+                date = '0' + date;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+            return `${year}-${month}-${date}`;
+        }
+    </script>
+    <!-- Mobile IE allows us to activate ClearType technology for smoothing fonts for easy reading -->
+    <meta http-equiv="cleartype" content="on">
+    <!-- Application styles. -->
+    <style type="text/css">
+        /*<%CSS%>*/
+    </style>
+</head>
+<body class="in-frontpage-view">
+    <!-- Update account balance dialog -->
+    <cf-update-balance-dialog></cf-update-balance-dialog>
+    <!-- Confirm dialog -->
+    <cf-confirm-dialog></cf-confirm-dialog>
+    
+    <main>
+        <!-- front page -->
+        <section class="page" id="front-page">
+            <cf-front-page></cf-front-page>
+        </section>
+
+        <!-- add/edit account page -->
+        <section class="page page--hide" id="add-edit-account-page">
+            <cf-add-edit-account-page></cf-add-edit-account-page>
+        </section>
+
+        <!-- account detail page -->
+        <section class="page page--hide" id="account-detail-page">
+            <cf-account-detail-page></cf-account-detail-page>
+        </section>
+
+    </main>
+    <script>
+        const IS_SCRIPTABLE = "<<SCRIPTABLE>>" === 'scriptable';
+        let APP_DATA = (IS_SCRIPTABLE) ? "<<APP_DATA>>" : {
+            'accounts': []
+        };
+
+        // If not in Scriptable environment. On development mode.
+        if (!window.completion) { 
+            window.completion = (str) => {
+                try {
+                    localStorage.setItem('CF_APP_DATA', str);
+                } catch (err) {}              
+            }; 
+            // try-catch needed because ios webview throws "insecure operation" error on
+            // localStorage.
+            try {
+                if (window?.localStorage.getItem('CF_APP_DATA')) {
+                    APP_DATA = JSON.parse(localStorage.getItem('CF_APP_DATA'));
+                }
+            }
+            catch (err) {}
+        }    
+        
+        function sumOfTransactions(transactions = []) {
+            let total = 0;
+            transactions.forEach((t) => {
+                total = total + parseFloat(t.amount);
+            });
+            if (total < 0 || isNaN(total)) { return 0; }
+            return total;
+        }
+
+        function sumOfAccounts() {
+            let total = 0;
+            APP_DATA['accounts'].forEach((account) => {
+                if (!(account?.exFromTotal)) {
+                    total = total + sumOfTransactions(account.transactions);
+                }              
+            });
+            if (total < 0 || isNaN(total)) { return 0; }
+            return total;
+        }
+
+        function makeId(salt = '') {
+            let r = Math.random().toFixed(3).replace('0.','cf');
+            return salt + (new Date()).getTime() + r;
+        }
+
+        const saveData = (() => {
+            let debouncer = null;
+            return () => {
+                clearTimeout(debouncer);
+                debouncer = setTimeout(() => {
+                    completion(JSON.stringify(APP_DATA));
+                }, 1e3);
+            };
+        })();
+
+        function getAccountByIden(iden) {
+            let account = null;
+            APP_DATA['accounts'].forEach((a) => {
+                if (a.iden == iden) {
+                    account = a;
+                }
+            });
+            return account;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+           /*<%JS%>*/
+        });
+    </script>
+</body>
+</html>
